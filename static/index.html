@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinic Token System</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f9fa; }
+        .container { background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; max-width: 600px; margin: auto; }
+        h1 { color: #007bff; }
+        button { margin: 4px 0; padding: 8px 16px; border-radius: 4px; border: none; background: #007bff; color: #fff; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .section { margin-bottom: 24px; }
+        .tokens { font-size: 1.1em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Clinic Token System</h1>
+    <div class="section">
+        <b>Doctor Status:</b> <span id="doctor-status"></span><br>
+        <b>Current Token:</b> <span id="current-token"></span><br>
+        <b>Average Consultation Time:</b> <span id="avg-time"></span>
+        <div style="margin-top:8px;">
+            <button onclick="doctorStart()">Doctor Start</button>
+            <button onclick="doctorGoAway()">Doctor Away</button>
+            <button onclick="doctorComeBack()">Doctor Back</button>
+        </div>
+    </div>
+    <div class="section">
+        <b>Tokens Issued:</b> <span id="tokens-issued"></span><br>
+        <b>Tokens Present:</b> <span id="tokens-present"></span><br>
+        <b>Tokens Absent:</b> <span id="tokens-absent"></span><br>
+        <div style="margin-top:8px;">
+            <button onclick="issueToken()">Issue Token</button>
+            <input id="arrive-token" type="number" min="1" placeholder="Token #" style="width: 60px;">
+            <button onclick="markArrive()">Mark Arrived</button>
+            <button onclick="markAbsent()">Mark Absent</button>
+        </div>
+    </div>
+    <div class="section">
+        <input id="consult-token" type="number" min="1" placeholder="Token #" style="width: 60px;">
+        <button onclick="startConsult()">Start Consult</button>
+        <button onclick="endConsult()">End Consult</button>
+    </div>
+</div>
+<script>
+const api = async (url, method="GET", body=null) => {
+    let opts = { method };
+    if (body) opts.body = JSON.stringify(body), opts.headers = { 'Content-Type': 'application/json' };
+    let res = await fetch(url, opts);
+    return res.json();
+};
+async function refresh() {
+    let data = await api('/status');
+    document.getElementById('doctor-status').textContent = data.doctor_status;
+    document.getElementById('current-token').textContent = data.current_token || '-';
+    document.getElementById('tokens-issued').textContent = data.tokens_issued;
+    document.getElementById('tokens-present').textContent = data.tokens_present.join(', ') || '-';
+    document.getElementById('tokens-absent').textContent = data.tokens_absent.join(', ') || '-';
+    document.getElementById('avg-time').textContent = data.avg_consult_time;
+}
+async function doctorStart() { await api('/doctor/start', 'POST'); refresh(); }
+async function doctorGoAway() { await api('/doctor/away', 'POST', { reason: 'Emergency' }); refresh(); }
+async function doctorComeBack() { await api('/doctor/back', 'POST'); refresh(); }
+async function issueToken() { await api('/token/issue', 'POST'); refresh(); }
+async function markArrive() {
+    let t = document.getElementById('arrive-token').value;
+    if (t) await api(`/token/arrive/${t}`, 'POST'); refresh();
+}
+async function markAbsent() {
+    let t = document.getElementById('arrive-token').value;
+    if (t) await api(`/token/absent/${t}`, 'POST'); refresh();
+}
+async function startConsult() {
+    let t = document.getElementById('consult-token').value;
+    if (t) await api(`/consult/start/${t}`, 'POST'); refresh();
+}
+async function endConsult() {
+    let t = document.getElementById('consult-token').value;
+    if (t) await api(`/consult/end/${t}`, 'POST'); refresh();
+}
+window.onload = refresh;
+</script>
+</body>
+</html>
