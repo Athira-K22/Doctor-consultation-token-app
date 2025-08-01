@@ -2,22 +2,171 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Clinic Token System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Consultation Token System</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f9fa; }
-        .container { background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; max-width: 600px; margin: auto; }
-        h1 { color: #007bff; }
-        button { margin: 4px 0; padding: 8px 16px; border-radius: 4px; border: none; background: #007bff; color: #fff; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        .section { margin-bottom: 24px; }
-        .tokens { font-size: 1.1em; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .dashboard-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .dashboard-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .features {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .features h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .feature-list {
+            text-align: left;
+            color: #555;
+        }
+        
+        .feature-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            .dashboard-links {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Clinic Token System</h1>
-    <div class="section">
-        <b>Doctor Status:</b> <span id="doctor-status"></span><br>
+    <div class="container">
+        <div class="logo">🏥</div>
+        <h1 class="title">Doctor Consultation</h1>
+        <p class="subtitle">Token Management System</p>
+        
+        <div class="dashboard-links">
+            <a href="/static/doctor-dashboard.html" class="dashboard-card">
+                <span class="dashboard-icon">👨‍⚕️</span>
+                <div class="dashboard-title">Doctor/Admin</div>
+                <div class="dashboard-desc">Manage tokens, status & consultations</div>
+            </a>
+            
+            <a href="/static/patient-dashboard.html" class="dashboard-card">
+                <span class="dashboard-icon">🧑‍🤝‍🧑</span>
+                <div class="dashboard-title">Patient</div>
+                <div class="dashboard-desc">View your token status & queue</div>
+            </a>
+        </div>
+        
+        <div class="features">
+            <h3>🌟 System Features</h3>
+            <ul class="feature-list">
+                <li>Real-time token queue management</li>
+                <li>Doctor availability status tracking</li>
+                <li>Patient queue position updates</li>
+                <li>Estimated waiting time calculation</li>
+                <li>Responsive design for all devices</li>
+                <li>Live notifications and updates</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
         <b>Current Token:</b> <span id="current-token"></span><br>
         <b>Average Consultation Time:</b> <span id="avg-time"></span>
         <div style="margin-top:8px;">

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Consultation Token App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .header-section {
+            background: #e9ecef;
+            border-bottom: 2px solid #333;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .app-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .doctor-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            color: #0066cc;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: 2px solid #333;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #e9ecef;
+        }
+        
+        .btn-start {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .btn-break {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .btn-emergency {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .stats-section {
+            padding: 15px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .table-section {
+            padding: 15px;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        
+        .queue-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+        
+        .queue-table th,
+        .queue-table td {
+            border: 1px solid #333;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        
+        .queue-table th {
+            background: #e9ecef;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .queue-table td {
+            text-align: center;
+        }
+        
+        .status-done {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .status-skipped {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .status-now {
+            background: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .status-waiting {
+            color: #6c757d;
+        }
+        
+        .check-in-yes {
+            color: #28a745;
+            font-size: 1.2em;
+        }
+        
+        .check-in-no {
+            color: #dc3545;
+            font-size: 1.2em;
+        }
+        
+        .controls-section {
+            padding: 15px;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .token-select {
+            padding: 5px 10px;
+            border: 2px solid #333;
+            font-family: inherit;
+            background: white;
+        }
+        
+        .alerts-section {
+            padding: 15px;
+            background: #f8f9fa;
+        }
+        
+        .alert-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            border-left: 4px solid #6c757d;
+            background: white;
+        }
+        
+        .alert-success {
+            border-left-color: #28a745;
+        }
+        
+        .alert-danger {
+            border-left-color: #dc3545;
+        }
+        
+        .alert-warning {
+            border-left-color: #ffc107;
+        }
+        
+        .alert-info {
+            border-left-color: #17a2b8;
+        }
+        
+        @media (max-width: 768px) {
+            .doctor-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+            }
+            
+            .stats-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .controls-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="app-title">Doctor Consultation Token App</div>
+            
+            <div class="doctor-info">
+                <span>Doctor: Dr. <span id="doctorName">[Name]</span></span>
+                <span>Status: <span id="doctorStatus" class="status-active">[Active 🔵]</span></span>
+            </div>
+            
+            <div class="control-buttons">
+                <button class="btn btn-start" onclick="startConsultation()">Start Consultation</button>
+                <button class="btn btn-break" onclick="takeBreak()">Break</button>
+                <button class="btn btn-emergency" onclick="emergency()">Emergency</button>
+            </div>
+        </div>
+        
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <span>Total Tokens Today: <span id="totalTokens">12</span></span>
+            <span>Now Serving: <span id="nowServing">7</span></span>
+        </div>
+        
+        <!-- Token Queue Overview -->
+        <div class="table-section">
+            <div class="section-title">Token Queue Overview</div>
+            
+            <table class="queue-table">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Patient Name</th>
+                        <th>Checked In</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="queueTableBody">
+                    <tr>
+                        <td>5</td>
+                        <td>John Doe</td>
+                        <td class="check-in-yes">✔️</td>
+                        <td class="status-done">Done</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Jane Smith</td>
+                        <td class="check-in-no">❌</td>
+                        <td class="status-skipped">Skipped</td>
+                    </tr>
+                    <tr class="status-now">
+                        <td>7</td>
+                        <td>Ali Khan</td>
+                        <td class="check-in-yes">✔️</td>
+                        <td>Now</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Sita Patel</td>
+                        <td></td>
+                        <td class="status-waiting">Waiting</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>(free)</td>
+                        <td></td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <span>Set Current Token:</span>
+            <select class="token-select" id="currentTokenSelect">
+                <option value="7">7 ▼</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+            </select>
+            <button class="btn" onclick="skipToken()">Skip</button>
+            <button class="btn" onclick="completeToken()">Complete</button>
+        </div>
+        
+        <!-- Attendance & Alerts -->
+        <div class="alerts-section">
+            <div class="section-title">Attendance & Alerts</div>
+            
+            <div class="alert-item alert-success">
+                ✔️ Patient 7 checked in
+            </div>
+            <div class="alert-item alert-danger">
+                ❌ Patient 6 absent — skipped
+            </div>
+            <div class="alert-item alert-info">
+                ⏱️ Avg. consult time: <span id="avgTime">12</span> min
+            </div>
+            <div class="alert-item alert-warning">
+                ⚠️ Emergency: Dr. called away
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample data
+        let queueData = [
+            { token: 5, name: "John Doe", checkedIn: true, status: "Done" },
+            { token: 6, name: "Jane Smith", checkedIn: false, status: "Skipped" },
+            { token: 7, name: "Ali Khan", checkedIn: true, status: "Now" },
+            { token: 8, name: "Sita Patel", checkedIn: null, status: "Waiting" },
+            { token: 9, name: "(free)", checkedIn: null, status: "—" }
+        ];
+        
+        let currentServing = 7;
+        let totalTokens = 12;
+        let avgConsultTime = 12;
+        
+        // Initialize dashboard
+        function init() {
+            updateDisplay();
+            updateQueue();
+            // Fetch from server every 5 seconds
+            setInterval(fetchServerData, 5000);
+        }
+        
+        // Update main display
+        function updateDisplay() {
+            document.getElementById('totalTokens').textContent = totalTokens;
+            document.getElementById('nowServing').textContent = currentServing;
+            document.getElementById('avgTime').textContent = avgConsultTime;
+        }
+        
+        // Update queue table
+        function updateQueue() {
+            const tbody = document.getElementById('queueTableBody');
+            tbody.innerHTML = '';
+            
+            queueData.forEach(item => {
+                const row = document.createElement('tr');
+                if (item.status === 'Now') {
+                    row.className = 'status-now';
+                }
+                
+                row.innerHTML = `
+                    <td>${item.token}</td>
+                    <td>${item.name}</td>
+                    <td class="${item.checkedIn === true ? 'check-in-yes' : item.checkedIn === false ? 'check-in-no' : ''}">
+                        ${item.checkedIn === true ? '✔️' : item.checkedIn === false ? '❌' : ''}
+                    </td>
+                    <td class="${getStatusClass(item.status)}">${item.status}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Get status CSS class
+        function getStatusClass(status) {
+            switch(status) {
+                case 'Done': return 'status-done';
+                case 'Skipped': return 'status-skipped';
+                case 'Now': return '';
+                case 'Waiting': return 'status-waiting';
+                default: return '';
+            }
+        }
+        
+        // Doctor controls
+        function startConsultation() {
+            fetch('/doctor/start', { method: 'POST' })
+                .then(() => {
+                    document.getElementById('doctorStatus').textContent = '[Active 🔵]';
+                    addAlert('✔️ Doctor started consultation', 'success');
+                });
+        }
+        
+        function takeBreak() {
+            fetch('/doctor/away', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reason: 'Break' })
+            }).then(() => {
+                document.getElementById('doctorStatus').textContent = '[On Break 🟡]';
+                addAlert('⏰ Doctor is on break', 'warning');
+            });
+        }
+        
+        function emergency() {
+            fetch('/doctor/away', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reason: 'Emergency' })
+            }).then(() => {
+                document.getElementById('doctorStatus').textContent = '[Emergency 🔴]';
+                addAlert('⚠️ Emergency: Dr. called away', 'warning');
+            });
+        }
+        
+        // Token controls
+        function skipToken() {
+            const currentToken = parseInt(document.getElementById('currentTokenSelect').value);
+            const tokenData = queueData.find(t => t.token === currentToken);
+            if (tokenData) {
+                tokenData.status = 'Skipped';
+                tokenData.checkedIn = false;
+                updateQueue();
+                addAlert(`❌ Token ${currentToken} skipped`, 'danger');
+            }
+        }
+        
+        function completeToken() {
+            const currentToken = parseInt(document.getElementById('currentTokenSelect').value);
+            const tokenData = queueData.find(t => t.token === currentToken);
+            if (tokenData) {
+                tokenData.status = 'Done';
+                updateQueue();
+                moveToNextToken();
+                addAlert(`✔️ Token ${currentToken} completed`, 'success');
+            }
+        }
+        
+        // Move to next token
+        function moveToNextToken() {
+            const nextToken = queueData.find(t => t.status === 'Waiting');
+            if (nextToken) {
+                // Clear current "Now" status
+                queueData.forEach(t => { if (t.status === 'Now') t.status = 'Done'; });
+                
+                // Set next token as current
+                nextToken.status = 'Now';
+                currentServing = nextToken.token;
+                
+                // Update select dropdown
+                document.getElementById('currentTokenSelect').value = nextToken.token;
+                
+                updateDisplay();
+                updateQueue();
+            }
+        }
+        
+        // Add alert to alerts section
+        function addAlert(message, type) {
+            const alertsSection = document.querySelector('.alerts-section');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert-item alert-${type}`;
+            alertDiv.textContent = message;
+            
+            // Insert after title
+            const title = alertsSection.querySelector('.section-title');
+            title.insertAdjacentElement('afterend', alertDiv);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+        
+        // Fetch data from server
+        function fetchServerData() {
+            Promise.all([
+                fetch('/doctor/status').then(r => r.json()),
+                fetch('/tokens/all').then(r => r.json())
+            ]).then(([doctorData, tokensData]) => {
+                // Update with server data
+                if (doctorData.status) {
+                    const statusText = doctorData.status === 'Available' ? '[Active 🔵]' : 
+                                     doctorData.status === 'Away' ? '[Away 🟡]' : '[Not Started 🔴]';
+                    document.getElementById('doctorStatus').textContent = statusText;
+                }
+                
+                // Update tokens if available
+                if (tokensData.tokens) {
+                    // Process server token data
+                    updateDisplay();
+                    updateQueue();
+                }
+            }).catch(err => {
+                console.log('Server fetch error:', err);
+                // Continue with demo data
+            });
+        }
+        
+        // Initialize when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>
