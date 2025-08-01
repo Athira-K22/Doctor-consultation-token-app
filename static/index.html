@@ -15,63 +15,115 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            align-content: center;
         }
         
         .container {
             max-width: 600px;
+            margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             text-align: center;
         }
         
         .logo {
-            font-size: 4em;
-            margin-bottom: 20px;
+            font-size: 3em;
+            margin-bottom: 15px;
         }
         
         .title {
-            font-size: 2.5em;
+            font-size: 2.2em;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: bold;
         }
         
         .subtitle {
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #666;
-            margin-bottom: 40px;
+            margin-bottom: 25px;
         }
         
         .dashboard-links {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
+            gap: 20px;
+            margin-bottom: 0px;
+        }
+        
+        .patient-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .patient-buttons {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+        
+        .patient-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .patient-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-icon {
+            font-size: 2em;
+            flex-shrink: 0;
+        }
+        
+        .btn-content {
+            flex: 1;
+        }
+        
+        .btn-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .btn-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
         }
         
         .dashboard-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 5px;
             text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
         
         .dashboard-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
+            font-size: 2.5em;
+            margin-bottom: 10px;
             display: block;
         }
         
@@ -146,23 +198,21 @@
                 <div class="dashboard-desc">Manage tokens, status & consultations</div>
             </a>
             
-            <a href="/static/patient-dashboard.html" class="dashboard-card">
-                <span class="dashboard-icon">🧑‍🤝‍🧑</span>
-                <div class="dashboard-title">Patient</div>
-                <div class="dashboard-desc">View your token status & queue</div>
-            </a>
-        </div>
-        
-        <div class="features">
-            <h3>🌟 System Features</h3>
-            <ul class="feature-list">
-                <li>Real-time token queue management</li>
-                <li>Doctor availability status tracking</li>
-                <li>Patient queue position updates</li>
-                <li>Estimated waiting time calculation</li>
-                <li>Responsive design for all devices</li>
-                <li>Live notifications and updates</li>
-            </ul>
+            <div class="patient-section">
+                <h3 style="color: white; margin-bottom: 15px; text-align: center;">👥 Patient</h3>
+                <div class="patient-buttons">
+                    <a href="/static/booking-flow.html" class="patient-btn">
+                        <span class="btn-icon">📝</span>
+                        <div class="btn-title">Book Token</div>
+                        <div class="btn-desc">Schedule appointment</div>
+                    </a>
+                    <a href="/static/patient-dashboard.html" class="patient-btn">
+                        <span class="btn-icon">📊</span>
+                        <div class="btn-title">View Status</div>
+                        <div class="btn-desc">Check queue & wait time</div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </body>

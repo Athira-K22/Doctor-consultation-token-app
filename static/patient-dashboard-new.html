@@ -111,113 +111,6 @@
             text-align: center;
         }
         
-        /* Token Keys Styling */
-        .token-keys-container {
-            margin-bottom: 20px;
-        }
-        
-        .token-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 8px;
-            justify-content: center;
-        }
-        
-        .token-key {
-            width: 50px;
-            height: 50px;
-            border: 3px solid #333;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .token-key:hover {
-            transform: translateY(-2px);
-            box-shadow: 3px 3px 6px rgba(0,0,0,0.4);
-        }
-        
-        .token-key:active {
-            transform: translateY(0);
-            box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-        
-        /* Token Status Colors */
-        .token-completed {
-            background: #6c757d;
-            color: white;
-            border-color: #545b62;
-        }
-        
-        .token-absent {
-            background: #dc3545;
-            color: white;
-            border-color: #c82333;
-        }
-        
-        .token-waiting {
-            background: #ffc107;
-            color: #212529;
-            border-color: #e0a800;
-        }
-        
-        .token-current {
-            background: #28a745;
-            color: white;
-            border-color: #1e7e34;
-            animation: pulse 2s infinite;
-        }
-        
-        .token-checked-in {
-            background: #17a2b8;
-            color: white;
-            border-color: #138496;
-        }
-        
-        .token-not-arrived {
-            background: #ffc107;
-            color: #212529;
-            border-color: #e0a800;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .token-legend {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .legend-key {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #333;
-            border-radius: 4px;
-        }
-        
         .status-completed {
             color: #28a745;
             font-weight: bold;
@@ -270,39 +163,16 @@
             background: #e9ecef;
         }
         
-        .btn-home {
-            background: #e2e3e5;
-            border-color: #6c757d;
-            color: #495057;
-            font-size: 16px;
-            padding: 6px 12px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-home:hover {
-            background: #d6d8db;
-            color: #495057;
-            text-decoration: none;
-        }
-        
         .btn-checkin {
             background: #d4edda;
             border-color: #28a745;
         }
         
         .wait-time {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 10px 15px;
             font-weight: bold;
-            margin-left: 20px;
-            position: relative;
-        }
-        
-        .wait-time::before {
-            content: "•";
-            position: absolute;
-            left: -15px;
-            color: #0066cc;
-            font-size: 1.2em;
         }
         
         .notifications-section {
@@ -351,11 +221,7 @@
     <div class="main-container">
         <!-- Header Section -->
         <div class="header-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <a href="/static/index.html" class="btn btn-home">🏠 Home</a>
-                <div style="width: 80px;"></div> <!-- Spacer for centering -->
-                <div style="width: 80px;"></div> <!-- Spacer for centering -->
-            </div>
+            <div class="app-title">Doctor Consultation Token App</div>
             
             <div class="doctor-info">
                 <span>Doctor: Dr. <span id="doctorName">[Name]</span></span>
@@ -366,11 +232,11 @@
         <!-- Token Info Section -->
         <div class="token-info-section">
             <div class="token-display">
-                <span class="token-number" id="yourToken">18</span>
+                <span class="token-number" id="yourToken">7</span>
                 <span class="token-label">[Your Token]</span>
             </div>
             <div class="token-display">
-                <span class="token-number" id="tokensToday">20</span>
+                <span class="token-number" id="tokensToday">12</span>
                 <span class="token-label">[Tokens Today]</span>
             </div>
         </div>
@@ -379,62 +245,53 @@
         <div class="table-section">
             <div class="section-title">Live Queue</div>
             
-            <!-- Token Status Legend -->
-            <div class="token-legend">
-                <div class="legend-item">
-                    <div class="legend-key token-completed"></div>
-                    <span>COMPLETED</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-key token-checked-in"></div>
-                    <span>CHECKED-IN</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-key token-current"></div>
-                    <span>CURRENT</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-key token-not-arrived"></div>
-                    <span>NOT ARRIVED</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-key token-absent"></div>
-                    <span>ABSENT</span>
-                </div>
-            </div>
-            
-            <!-- Token Keys Display -->
-            <div class="token-keys-container">
-                <div class="token-row">
-                    <div class="token-key token-completed">1</div>
-                    <div class="token-key token-completed">2</div>
-                    <div class="token-key token-completed">3</div>
-                    <div class="token-key token-absent">4</div>
-                    <div class="token-key token-absent">5</div>
-                    <div class="token-key token-absent">6</div>
-                    <div class="token-key token-current">7</div>
-                    <div class="token-key token-checked-in">8</div>
-                    <div class="token-key token-checked-in">9</div>
-                    <div class="token-key token-checked-in">10</div>
-                </div>
-                <div class="token-row">
-                    <div class="token-key token-checked-in">11</div>
-                    <div class="token-key token-checked-in">12</div>
-                    <div class="token-key token-checked-in">13</div>
-                    <div class="token-key token-checked-in">14</div>
-                    <div class="token-key token-checked-in">15</div>
-                    <div class="token-key token-not-arrived">16</div>
-                    <div class="token-key token-not-arrived">17</div>
-                    <div class="token-key token-not-arrived" style="border-color: #0066cc; border-width: 4px; background: #fff3cd;">18</div>
-                    <div class="token-key token-not-arrived">19</div>
-                    <div class="token-key token-not-arrived">20</div>
-                </div>
-            </div>
+            <table class="queue-table">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Patient Name</th>
+                        <th>Status</th>
+                        <th>ETA</th>
+                    </tr>
+                </thead>
+                <tbody id="queueTableBody">
+                    <tr>
+                        <td>5</td>
+                        <td>John Doe</td>
+                        <td class="status-completed">Completed</td>
+                        <td>09:40 AM</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Jane Smith</td>
+                        <td class="status-skipped">Skipped</td>
+                        <td>--</td>
+                    </tr>
+                    <tr class="your-row">
+                        <td>7</td>
+                        <td>[You]</td>
+                        <td class="status-waiting">Waiting</td>
+                        <td id="yourETA">10:10 AM</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Ali Khan</td>
+                        <td class="status-checked-in">Checked-In</td>
+                        <td>10:20 AM</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Sita Patel</td>
+                        <td class="status-absent">Absent</td>
+                        <td>--</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         
         <!-- Controls Section -->
         <div class="controls-section">
-            <button class="btn btn-checkin" onclick="checkIn()">✅ Mark as Present</button>
+            <button class="btn btn-checkin" onclick="checkIn()">Check-In Button</button>
             <div class="wait-time">Estimated Wait: <span id="estimatedWait">30</span> min</div>
         </div>
         
@@ -455,17 +312,16 @@
     </div>
     
     <script>
-        let myToken = 18;
+        let myToken = 7;
         let isCheckedIn = false;
-        let totalTokensToday = 20;
         
         // Sample data matching wireframe
         let queueData = [
             { token: 5, name: "John Doe", status: "Completed", eta: "09:40 AM" },
             { token: 6, name: "Jane Smith", status: "Skipped", eta: "--" },
-            { token: 7, name: "Ali Khan", status: "Current", eta: "10:10 AM" },
-            { token: 8, name: "Sita Patel", status: "Checked-In", eta: "10:20 AM" },
-            { token: 18, name: "[You]", status: "Waiting", eta: "11:30 AM" }
+            { token: 7, name: "[You]", status: "Waiting", eta: "10:10 AM" },
+            { token: 8, name: "Ali Khan", status: "Checked-In", eta: "10:20 AM" },
+            { token: 9, name: "Sita Patel", status: "Absent", eta: "--" }
         ];
         
         // Initialize dashboard
@@ -493,7 +349,7 @@
         // Update display
         function updateDisplay() {
             document.getElementById('yourToken').textContent = myToken;
-            document.getElementById('tokensToday').textContent = totalTokensToday;
+            document.getElementById('tokensToday').textContent = queueData.length;
             
             // Update your row in the table
             const yourData = queueData.find(q => q.token === myToken);
@@ -546,9 +402,6 @@
                     yourData.status = 'Checked-In';
                 }
                 
-                // Update the visual token in the grid
-                updateTokenVisual(myToken, 'checked-in');
-                
                 updateQueue();
                 addNotification('✔️ You have checked in successfully!', 'success');
                 
@@ -562,36 +415,6 @@
                 fetch(`/token/arrive/${myToken}`, { method: 'POST' })
                     .catch(err => console.log('Server error:', err));
             }
-        }
-        
-        // Update token visual appearance
-        function updateTokenVisual(tokenNumber, status) {
-            // Find the token element in the grid
-            const tokenElements = document.querySelectorAll('.token-key');
-            tokenElements.forEach(element => {
-                if (element.textContent == tokenNumber) {
-                    // Remove all status classes
-                    element.classList.remove('token-completed', 'token-absent', 'token-waiting', 
-                                           'token-current', 'token-checked-in', 'token-not-arrived');
-                    
-                    // Special handling for token 18 (user's token) when marked as present
-                    if (tokenNumber == 18 && status == 'checked-in') {
-                        element.style.background = 'black';
-                        element.style.color = 'white';
-                        element.style.borderColor = 'black';
-                        element.style.borderWidth = '4px';
-                    } else {
-                        // Add the new status class for other tokens
-                        element.classList.add('token-' + status);
-                        
-                        // Keep the special styling if it's the user's token
-                        if (tokenNumber == myToken) {
-                            element.style.borderColor = '#138496'; // Match checked-in color
-                            element.style.borderWidth = '4px';
-                        }
-                    }
-                }
-            });
         }
         
         // Add notification

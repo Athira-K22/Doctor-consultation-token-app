@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Token - Doctor Consultation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .header-section {
+            background: #e9ecef;
+            border-bottom: 2px solid #333;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .app-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: 2px solid #333;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: #e9ecef;
+        }
+        
+        .btn-home {
+            background: #e2e3e5;
+            border-color: #6c757d;
+            color: #495057;
+            font-size: 16px;
+            padding: 6px 12px;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            border-color: #0056b3;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            border-color: #1e7e34;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+        }
+        
+        .btn-success:hover {
+            background: #1e7e34;
+            color: white;
+        }
+        
+        .form-section {
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .info-box {
+            background: #d1ecf1;
+            border: 2px solid #bee5eb;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box h4 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            color: #0c5460;
+            margin-bottom: 5px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success-message h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        
+        .success-message p {
+            color: #155724;
+        }
+        
+        .token-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #28a745;
+            margin: 10px 0;
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-primary, .btn-success {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <a href="/static/index.html" class="btn btn-home">🏠 Home</a>
+                <div class="app-title" style="margin: 0;">Book a Token</div>
+                <div style="width: 80px;"></div> <!-- Spacer for centering -->
+            </div>
+        </div>
+        
+        <!-- Booking Form Section -->
+        <div class="form-section">
+            <div class="section-title">📝 Confirm Your Booking</div>
+            
+            <!-- Booking Details -->
+            <div class="info-box">
+                <h4>� Booking Details</h4>
+                <p><strong>Location:</strong> <span id="selectedLocation">Pune City</span></p>
+                <p><strong>Speciality:</strong> <span id="selectedSpeciality">Pediatrics</span></p>
+                <p><strong>Doctor:</strong> <span id="selectedDoctor">Dr. Anjali Rao</span></p>
+                <p><strong>Qualification:</strong> <span id="doctorQualification">MBBS, MD Pediatrics</span></p>
+                <p><strong>Timings:</strong> <span id="doctorTimings">10am–2pm, 4pm–6pm</span></p>
+            </div>
+            
+            <!-- Current Status Info -->
+            <div class="info-box">
+                <h4>📊 Current Status</h4>
+                <p><strong>Now Serving:</strong> Token #<span id="currentToken">7</span></p>
+                <p><strong>Estimated Wait Time:</strong> <span id="waitTime">45</span> minutes</span></p>
+                <p><strong>Your Token Number:</strong> #<span id="nextToken">21</span></p>
+            </div>
+            
+            <!-- Simple Patient Details -->
+            <div class="form-group">
+                <label class="form-label" for="patientName">Full Name *</label>
+                <input type="text" id="patientName" class="form-input" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="patientPhone">Phone Number *</label>
+                <input type="tel" id="patientPhone" class="form-input" required 
+                       placeholder="Enter your phone number (10 digits)" 
+                       maxlength="10" 
+                       pattern="[0-9]{10}"
+                       oninput="validatePhoneNumber(this)">
+                <small id="phoneError" style="color: red; display: none;">Please enter a valid 10-digit phone number</small>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="button" class="btn btn-success" onclick="confirmBooking()">🎫 Book Token</button>
+            </div>
+            
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message">
+                <h3>✅ Token Booked Successfully!</h3>
+                <div class="token-number">Token #<span id="bookedTokenNumber">21</span></div>
+                <p><strong>Name:</strong> <span id="bookedName"></span></p>
+                <p><strong>Estimated Wait:</strong> <span id="bookedWaitTime"></span> minutes</p>
+                <p><strong>Please arrive 10 minutes before your estimated time.</strong></p>
+                <div style="margin-top: 15px;">
+                    <a href="/static/patient-dashboard.html" class="btn btn-primary">📊 Track Your Token</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let nextTokenNumber = 21;
+        let currentServing = 7;
+        let avgConsultTime = 12; // minutes
+        let bookingDetails = {};
+        
+        // Initialize page
+        function init() {
+            loadBookingDetails();
+            updateStatus();
+            loadFormData();
+        }
+        
+        // Load booking details from URL parameters or localStorage
+        function loadBookingDetails() {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Try to get from URL first, then localStorage as fallback
+            bookingDetails = {
+                location: urlParams.get('location') || localStorage.getItem('selectedLocation') || 'Pune City',
+                speciality: urlParams.get('speciality') || localStorage.getItem('selectedSpeciality') || 'Pediatrics',
+                doctor: urlParams.get('doctor') || localStorage.getItem('selectedDoctor') || 'Dr. Anjali Rao',
+                qualification: urlParams.get('qualification') || localStorage.getItem('doctorQualification') || 'MBBS, MD Pediatrics',
+                timings: urlParams.get('timings') || localStorage.getItem('doctorTimings') || '10am–2pm, 4pm–6pm'
+            };
+            
+            // Update the display
+            document.getElementById('selectedLocation').textContent = bookingDetails.location;
+            document.getElementById('selectedSpeciality').textContent = bookingDetails.speciality.charAt(0).toUpperCase() + bookingDetails.speciality.slice(1);
+            document.getElementById('selectedDoctor').textContent = bookingDetails.doctor;
+            document.getElementById('doctorQualification').textContent = bookingDetails.qualification;
+            document.getElementById('doctorTimings').textContent = bookingDetails.timings;
+        }
+        
+        // Update current status information
+        function updateStatus() {
+            document.getElementById('currentToken').textContent = currentServing;
+            document.getElementById('nextToken').textContent = nextTokenNumber;
+            
+            // Calculate estimated wait time
+            const tokensAhead = nextTokenNumber - currentServing - 1;
+            const estimatedWait = tokensAhead * avgConsultTime;
+            document.getElementById('waitTime').textContent = estimatedWait;
+        }
+        
+        // Load any saved form data
+        function loadFormData() {
+            const savedName = localStorage.getItem('patientName');
+            const savedPhone = localStorage.getItem('patientPhone');
+            
+            if (savedName) document.getElementById('patientName').value = savedName;
+            if (savedPhone) document.getElementById('patientPhone').value = savedPhone;
+        }
+        
+        // Phone number validation function
+        function validatePhoneNumber(input) {
+            const phoneError = document.getElementById('phoneError');
+            const phoneNumber = input.value.replace(/\D/g, ''); // Remove non-digits
+            
+            // Only allow digits
+            input.value = phoneNumber;
+            
+            // Validate length and pattern
+            if (phoneNumber.length === 0) {
+                phoneError.style.display = 'none';
+                input.style.borderColor = '#333';
+            } else if (phoneNumber.length !== 10 || !/^[6-9]\d{9}$/.test(phoneNumber)) {
+                phoneError.style.display = 'block';
+                phoneError.textContent = 'Please enter a valid 10-digit phone number starting with 6-9';
+                input.style.borderColor = 'red';
+            } else {
+                phoneError.style.display = 'none';
+                input.style.borderColor = 'green';
+            }
+        }
+        
+        // Enhanced phone validation
+        function isValidPhoneNumber(phone) {
+            // Remove any non-digit characters
+            const cleanPhone = phone.replace(/\D/g, '');
+            
+            // Check if it's exactly 10 digits and starts with 6-9 (Indian mobile number format)
+            return /^[6-9]\d{9}$/.test(cleanPhone);
+        }
+        
+        // Confirm booking function
+        function confirmBooking() {
+            const patientName = document.getElementById('patientName').value.trim();
+            const patientPhone = document.getElementById('patientPhone').value.trim();
+            
+            // Enhanced validation
+            if (!patientName) {
+                alert('Please enter your full name');
+                document.getElementById('patientName').focus();
+                return;
+            }
+            
+            if (!patientPhone) {
+                alert('Please enter your phone number');
+                document.getElementById('patientPhone').focus();
+                return;
+            }
+            
+            // Validate phone number format
+            if (!isValidPhoneNumber(patientPhone)) {
+                alert('Please enter a valid 10-digit phone number starting with 6-9');
+                document.getElementById('patientPhone').focus();
+                return;
+            }
+            
+            const formData = {
+                name: patientName,
+                phone: patientPhone,
+                tokenNumber: nextTokenNumber,
+                ...bookingDetails
+            };
+            
+            // Save to localStorage for future use
+            localStorage.setItem('patientName', formData.name);
+            localStorage.setItem('patientPhone', formData.phone);
+            
+            // Book the token
+            bookToken(formData);
+        }
+        
+        // Book token function
+        function bookToken(formData) {
+            // Show loading state
+            const submitBtn = document.querySelector('.btn-success');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '⏳ Booking...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Show success message
+                alert(`✅ Token Booked Successfully!
+
+Token Number: #${formData.tokenNumber}
+Patient Name: ${formData.name}
+Doctor: ${formData.doctor}
+Location: ${formData.location}
+Speciality: ${formData.speciality}
+
+Estimated Wait Time: ${(formData.tokenNumber - currentServing - 1) * avgConsultTime} minutes
+
+Please arrive 10 minutes before your estimated time.`);
+                
+                // Save token info for patient dashboard
+                localStorage.setItem('myToken', JSON.stringify({
+                    number: formData.tokenNumber,
+                    name: formData.name,
+                    phone: formData.phone,
+                    doctor: formData.doctor,
+                    location: formData.location,
+                    speciality: formData.speciality,
+                    bookedAt: new Date().toISOString(),
+                    status: 'booked'
+                }));
+                
+                // Reset form and redirect
+                setTimeout(() => {
+                    // Redirect to patient dashboard to track token
+                    window.location.href = '/static/patient-dashboard.html';
+                }, 2000);
+                
+            }, 1500);
+        }
+        
+        // Fetch real-time data from server
+        function fetchServerData() {
+            Promise.all([
+                fetch('/doctor/status').then(r => r.json()),
+                fetch('/tokens/current').then(r => r.json())
+            ]).then(([doctorData, tokenData]) => {
+                if (tokenData.current) {
+                    currentServing = tokenData.current;
+                    updateStatus();
+                }
+            }).catch(err => {
+                console.log('Server fetch error:', err);
+                // Continue with demo data
+            });
+        }
+        
+        // Initialize when page loads
+        window.onload = init;
+        
+        // Fetch server data every 30 seconds
+        setInterval(fetchServerData, 30000);
+    </script>
+</body>
+</html>
