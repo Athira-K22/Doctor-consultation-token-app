@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="48" height="48">
+  <circle cx="50" cy="50" r="45" fill="#fa709a" stroke="#fee140" stroke-width="2"/>
+  <g fill="white">
+    <!-- Stylized baby -->
+    <circle cx="50" cy="32" r="10"/>
+    <ellipse cx="50" cy="55" rx="12" ry="18"/>
+    <!-- Arms -->
+    <circle cx="38" cy="50" r="4"/>
+    <circle cx="62" cy="50" r="4"/>
+    <!-- Legs -->
+    <circle cx="44" cy="68" r="3"/>
+    <circle cx="56" cy="68" r="3"/>
+    <!-- Happy face -->
+    <circle cx="46" cy="29" r="1.5" fill="#fa709a"/>
+    <circle cx="54" cy="29" r="1.5" fill="#fa709a"/>
+    <path d="M46 35 Q50 38 54 35" stroke="#fa709a" stroke-width="2" fill="none"/>
+    <!-- Cute elements -->
+    <g fill="#fee140" opacity="0.8">
+      <circle cx="35" cy="25" r="2"/>
+      <circle cx="65" cy="25" r="2"/>
+      <circle cx="30" cy="75" r="1.5"/>
+      <circle cx="70" cy="75" r="1.5"/>
+    </g>
+  </g>
+</svg>

@@ -45,7 +45,7 @@ class DoctorStatus:
 
 class TokenSystem:
     def __init__(self):
-        self.tokens_issued = 0
+        self.tokens_issued = 20  # Start with 20 tokens already issued
         self.tokens_present = set()
         self.current_token = None
         self.token_times = {}  # token: (start_time, end_time)

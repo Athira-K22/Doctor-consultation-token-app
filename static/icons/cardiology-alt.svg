@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="48" height="48">
+  <circle cx="50" cy="50" r="45" fill="#ff6b6b" stroke="#ee5a52" stroke-width="2"/>
+  <g fill="white">
+    <!-- Modern heart -->
+    <path d="M50 70 C45 65, 25 45, 25 35 C25 25, 35 20, 50 35 C65 20, 75 25, 75 35 C75 45, 55 65, 50 70 Z"/>
+    <!-- EKG line -->
+    <g stroke="white" stroke-width="2.5" fill="none">
+      <path d="M15 25 L20 25 L25 15 L30 35 L35 10 L40 30 L45 25 L85 25"/>
+    </g>
+    <!-- Pulse dots -->
+    <g fill="#ff9ff3" opacity="0.8">
+      <circle cx="50" cy="50" r="2"/>
+      <circle cx="45" cy="45" r="1.5"/>
+      <circle cx="55" cy="55" r="1.5"/>
+    </g>
+    <!-- Heart detail -->
+    <path d="M45 55 Q50 60 55 55" stroke="#ff9ff3" stroke-width="1.5" fill="none"/>
+  </g>
+</svg>

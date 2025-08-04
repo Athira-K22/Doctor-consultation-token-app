@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="48" height="48">
+  <circle cx="50" cy="50" r="45" fill="#667eea" stroke="#4c63d2" stroke-width="2"/>
+  <g fill="white">
+    <!-- Modern surgical tools -->
+    <rect x="35" y="25" width="2" height="20" rx="1" transform="rotate(30 36 35)"/>
+    <circle cx="40" cy="30" r="3"/>
+    <rect x="55" y="40" width="20" height="2" rx="1"/>
+    <circle cx="65" cy="45" r="4"/>
+    <!-- Plus sign -->
+    <rect x="28" y="60" width="12" height="3" rx="1"/>
+    <rect x="32.5" y="55.5" width="3" height="12" rx="1"/>
+  </g>
+</svg>

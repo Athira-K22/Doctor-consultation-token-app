@@ -1,0 +1,38 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="#16A085" stroke="#138D75" stroke-width="2"/>
+  
+  <!-- ENT symbol -->
+  <g transform="translate(32, 32)">
+    <!-- Ear outline -->
+    <path d="M-18 -10 Q-22 -14 -16 -18 Q-12 -20 -8 -16 Q-6 -12 -8 -8 Q-10 -6 -14 -8 Q-18 -10 -18 -10" 
+          fill="white" stroke="#16A085" stroke-width="1.5"/>
+    
+    <!-- Ear canal -->
+    <circle cx="-12" cy="-12" r="2.5" fill="#16A085"/>
+    
+    <!-- Nose bridge -->
+    <ellipse cx="0" cy="-8" rx="3" ry="10" fill="white" stroke="#16A085" stroke-width="1.5"/>
+    
+    <!-- Nostrils -->
+    <ellipse cx="-1.5" cy="-4" rx="1" ry="2" fill="#16A085"/>
+    <ellipse cx="1.5" cy="-4" rx="1" ry="2" fill="#16A085"/>
+    
+    <!-- Throat/mouth area -->
+    <ellipse cx="0" cy="10" rx="10" ry="5" fill="white" stroke="#16A085" stroke-width="1.5"/>
+    
+    <!-- Throat opening -->
+    <ellipse cx="0" cy="10" rx="6" ry="2" fill="#16A085"/>
+    
+    <!-- Medical examination tool -->
+    <g transform="translate(15, -12)">
+      <rect x="0" y="-1.5" width="10" height="3" fill="white" stroke="#16A085" stroke-width="1" rx="1.5"/>
+      <circle cx="0" cy="0" r="3" fill="white" stroke="#16A085" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="1.5" fill="#16A085"/>
+    </g>
+    
+    <!-- Additional medical cross -->
+    <rect x="-12" y="18" width="6" height="1.5" fill="white"/>
+    <rect x="-10.5" y="16.5" width="1.5" height="6" fill="white"/>
+  </g>
+</svg>

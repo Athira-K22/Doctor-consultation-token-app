@@ -422,19 +422,58 @@
     <script>
         let myToken = 21;
         let isCheckedIn = false;
-        let totalTokensToday = 21;
+        let totalTokensToday = 20; // Initial token count
         
-        // Sample data matching wireframe
-        let queueData = [
+        // Sample data for first 20 tokens (existing statuses)
+        let baseQueueData = [
             { token: 5, name: "John Doe", status: "Completed", eta: "09:40 AM" },
             { token: 6, name: "Jane Smith", status: "Skipped", eta: "--" },
             { token: 7, name: "Ali Khan", status: "Current", eta: "10:10 AM" },
-            { token: 8, name: "Sita Patel", status: "Checked-In", eta: "10:20 AM" },
-            { token: 21, name: "[You]", status: "Waiting", eta: "11:30 AM" }
+            { token: 8, name: "Sita Patel", status: "Checked-In", eta: "10:20 AM" }
         ];
+        
+        // Dynamic queue data that will be built based on totalTokensToday
+        let queueData = [];
+        
+        // Function to build queue data based on current token count
+        function buildQueueData() {
+            queueData = [];
+            console.log(`Building queue data - totalTokensToday: ${totalTokensToday}, myToken: ${myToken}`);
+            
+            // Add all tokens from 1 to totalTokensToday
+            for (let i = 1; i <= totalTokensToday; i++) {
+                let tokenData = {
+                    token: i,
+                    name: "",
+                    status: "Not Arrived",
+                    eta: "--"
+                };
+                
+                // Check if this token has existing data in baseQueueData (tokens 1-20)
+                const existingData = baseQueueData.find(item => item.token === i);
+                if (existingData) {
+                    tokenData = {...existingData}; // Use existing status for tokens with predefined data
+                } else {
+                    // For new tokens (21+), set default status
+                    if (i === myToken) {
+                        tokenData.name = "[You]";
+                        tokenData.status = isCheckedIn ? "Checked-In" : "Not Arrived";
+                        console.log(`Set user token ${i} with status: ${tokenData.status}`);
+                    } else {
+                        tokenData.name = `Patient ${i}`;
+                        tokenData.status = "Not Arrived";
+                    }
+                }
+                
+                queueData.push(tokenData);
+            }
+            console.log("Built queueData:", queueData);
+        }
         
         // Initialize dashboard
         function init() {
+            console.log("Starting init - myToken:", myToken, "totalTokensToday:", totalTokensToday);
+            
             // Get token from URL or localStorage
             const urlParams = new URLSearchParams(window.location.search);
             const tokenFromUrl = urlParams.get('token');
@@ -442,10 +481,36 @@
             if (tokenFromUrl) {
                 myToken = parseInt(tokenFromUrl);
                 localStorage.setItem('patientToken', myToken);
+                console.log("Token from URL:", myToken);
+                
+                // Update totalTokensToday to include the new token if it's higher
+                if (myToken > totalTokensToday) {
+                    totalTokensToday = myToken;
+                    console.log("Updated totalTokensToday to:", totalTokensToday);
+                }
             } else {
                 const stored = localStorage.getItem('patientToken');
-                if (stored) myToken = parseInt(stored);
+                if (stored) {
+                    myToken = parseInt(stored);
+                    console.log("Token from storage:", myToken);
+                    // Update totalTokensToday if stored token is higher
+                    if (myToken > totalTokensToday) {
+                        totalTokensToday = myToken;
+                        console.log("Updated totalTokensToday from storage to:", totalTokensToday);
+                    }
+                }
             }
+            
+            // Ensure totalTokensToday is always at least as high as myToken
+            if (myToken > totalTokensToday) {
+                totalTokensToday = myToken;
+                console.log("Final update - totalTokensToday to:", totalTokensToday);
+            }
+            
+            console.log("After init - myToken:", myToken, "totalTokensToday:", totalTokensToday);
+            
+            // Build dynamic queue data
+            buildQueueData();
             
             document.getElementById('yourToken').textContent = myToken;
             updateDisplay();
@@ -502,11 +567,8 @@
             if (!isCheckedIn) {
                 isCheckedIn = true;
                 
-                // Update your status in the queue
-                const yourData = queueData.find(q => q.token === myToken);
-                if (yourData) {
-                    yourData.status = 'Checked-In';
-                }
+                // Rebuild queue data to update user's token status
+                buildQueueData();
                 
                 // Update the visual token in the grid
                 updateTokenVisual(myToken, 'checked-in');
@@ -556,8 +618,8 @@
             const tokensPerRow = 10;
             let rowDiv = null;
             
-            // Make sure we're showing at least up to token 30
-            const maxToken = Math.max(30, totalTokensToday);
+            // Show tokens up to totalTokensToday (dynamic based on bookings)
+            const maxToken = totalTokensToday;
             
             for (let i = 1; i <= maxToken; i++) {
                 if ((i - 1) % tokensPerRow === 0) {
@@ -570,7 +632,7 @@
                 // Default class, will update below
                 let tokenClass = 'token-key token-not-arrived';
                 
-                // Find token status from queueData if available
+                // Find token status from queueData
                 const tokenData = queueData.find(t => t.token === i);
                 if (tokenData) {
                     if (tokenData.status === 'Completed') tokenClass = 'token-key token-completed';
@@ -578,6 +640,7 @@
                     else if (tokenData.status === 'Current') tokenClass = 'token-key token-current';
                     else if (tokenData.status === 'Skipped') tokenClass = 'token-key token-not-arrived';
                     else if (tokenData.status === 'Waiting') tokenClass = 'token-key token-not-arrived';
+                    else if (tokenData.status === 'Not Arrived') tokenClass = 'token-key token-not-arrived';
                 }
                 
                 tokenDiv.className = tokenClass;
@@ -613,36 +676,48 @@
         
         // Fetch data from server
         function fetchServerData() {
-            Promise.all([
-                fetch('/doctor/status').then(r => r.json()),
-                fetch('/tokens/current').then(r => r.json()),
-                fetch('/tokens/all').then(r => r.json())
-            ]).then(([doctorData, currentData, allTokensData]) => {
-                // Update doctor status
-                if (doctorData.status) {
-                    const statusText = doctorData.status === 'Available' ? '[Active 🔵]' : 
-                                     doctorData.status === 'Away' ? '[Away 🟡]' : '[Not Started 🔴]';
-                    document.getElementById('doctorStatus').textContent = statusText;
-                }
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update doctor status
+                    if (data.doctor_status) {
+                        const statusText = data.doctor_status.includes('Available') ? '[Active 🔵]' : 
+                                         data.doctor_status.includes('Away') ? '[Away 🟡]' : '[Not Started 🔴]';
+                        document.getElementById('doctorStatus').textContent = statusText;
+                    }
+                    
+                    // Update token count from server
+                    if (data.tokens_issued && data.tokens_issued > totalTokensToday) {
+                        totalTokensToday = data.tokens_issued;
+                        buildQueueData(); // Rebuild queue with new token count
+                        updateDisplay();
+                        generateTokenGrid(); // Refresh the token grid
+                    }
+                    
+                    // Update current token display
+                    if (data.current_token) {
+                        // You can add logic here to highlight the current token being served
+                    }
+                })
+                .catch(err => {
+                    console.log('Server fetch error:', err);
+                    // Continue with current data if server is not available
+                });
+        }
+        
+        // Function to handle new token booking (can be called when a new token is issued)
+        function handleNewTokenIssued(newTokenNumber) {
+            if (newTokenNumber > totalTokensToday) {
+                totalTokensToday = newTokenNumber;
+                buildQueueData();
+                updateDisplay();
+                generateTokenGrid();
                 
-                // Update current token and queue
-                if (currentData.current_token) {
-                    // Update queue based on current token
+                // If this is the user's new token, update myToken
+                if (newTokenNumber === myToken) {
+                    localStorage.setItem('patientToken', myToken);
                 }
-                
-                // Process server token data
-                if (allTokensData.tokens) {
-                    queueData = allTokensData.tokens; // Update queueData with server data
-                    totalTokensToday = Math.max(21, queueData.length); // Ensure we show at least up to token 21
-                    updateDisplay();
-                    updateQueue();
-                    generateTokenGrid(); // Refresh the token grid
-                }
-            }).catch(err => {
-                console.log('Server fetch error:', err);
-                // Continue with demo data
-                generateTokenGrid(); // Ensure grid is generated even if fetch fails
-            });
+            }
         }
         
         // Initialize when page loads

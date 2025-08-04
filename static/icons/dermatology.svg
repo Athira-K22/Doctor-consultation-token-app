@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="48" height="48">
+  <circle cx="50" cy="50" r="45" fill="#ffc107" stroke="#e0a800" stroke-width="2"/>
+  <g fill="white">
+    <!-- Skin layers representation -->
+    <path d="M20 35 Q50 25 80 35 Q80 45 50 40 Q20 45 20 35 Z"/>
+    <path d="M22 45 Q50 35 78 45 Q78 55 50 50 Q22 55 22 45 Z"/>
+    <path d="M24 55 Q50 45 76 55 Q76 65 50 60 Q24 65 24 55 Z"/>
+    <!-- Sparkles for healthy skin -->
+    <g stroke="white" stroke-width="1" fill="none">
+      <path d="M30 25 L32 27 L30 29 L28 27 Z"/>
+      <path d="M65 28 L67 30 L65 32 L63 30 Z"/>
+      <path d="M70 60 L72 62 L70 64 L68 62 Z"/>
+      <path d="M25 60 L27 62 L25 64 L23 62 Z"/>
+    </g>
+  </g>
+</svg>
