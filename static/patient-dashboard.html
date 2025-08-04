@@ -135,7 +135,6 @@
             font-weight: bold;
             font-size: 14px;
             font-family: 'Courier New', monospace;
-            cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
             box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -353,14 +352,14 @@
             
             <div class="doctor-info">
                 <span>Doctor: Dr. <span id="doctorName">[Name]</span></span>
-                <span>Status: <span id="doctorStatus" class="status-active">[Active 🔵]</span></span>
+                <span>Status: <span id="doctorStatus" class="status-active">[On Break 🟡]</span></span>
             </div>
         </div>
         
         <!-- Token Info Section -->
         <div class="token-info-section">
             <div class="token-display">
-                <span class="token-number" id="yourToken">18</span>
+                <span class="token-number" id="yourToken">10</span>
                 <span class="token-label">[Your Token]</span>
             </div>
             <div class="token-display">
@@ -404,8 +403,8 @@
                     <div class="token-key token-not-arrived">6</div>
                     <div class="token-key token-current">7</div>
                     <div class="token-key token-checked-in">8</div>
-                    <div class="token-key token-checked-in">9</div>
-                    <div class="token-key token-checked-in">10</div>
+                    <div class="token-key token-not-arrived">9</div>
+                    <div class="token-key token-not-arrived" style="border-color: #0066cc; border-width: 4px; background: #fff3cd;">10</div>
                 </div>
                 <div class="token-row">
                     <div class="token-key token-checked-in">11</div>
@@ -415,7 +414,7 @@
                     <div class="token-key token-checked-in">15</div>
                     <div class="token-key token-not-arrived">16</div>
                     <div class="token-key token-not-arrived">17</div>
-                    <div class="token-key token-not-arrived" style="border-color: #0066cc; border-width: 4px; background: #fff3cd;">18</div>
+                    <div class="token-key token-not-arrived">18</div>
                     <div class="token-key token-not-arrived">19</div>
                     <div class="token-key token-not-arrived">20</div>
                 </div>
@@ -425,7 +424,7 @@
         <!-- Controls Section -->
         <div class="controls-section">
             <button class="btn btn-checkin" onclick="checkIn()">✅ Mark as Present</button>
-            <div class="wait-time">Estimated Wait: <span id="estimatedWait">30</span> min</div>
+            <div class="wait-time">Estimated Wait: <span id="estimatedWait">15</span> min</div>
         </div>
         
         <!-- Notifications -->
@@ -436,7 +435,7 @@
                 🔔 Doctor is now on break
             </div>
             <div class="notification-item notification-info">
-                🔔 Token 6 was skipped
+                🔔 Tokens 4, 5, 6 were skipped
             </div>
             <div class="notification-item notification-success">
                 🔔 Your turn is approaching!
@@ -445,7 +444,7 @@
     </div>
     
     <script>
-        let myToken = 18;
+        let myToken = 10;
         let isCheckedIn = false;
         let totalTokensToday = 20;
         
@@ -455,7 +454,7 @@
             { token: 6, name: "Jane Smith", status: "Skipped", eta: "--" },
             { token: 7, name: "Ali Khan", status: "Current", eta: "10:10 AM" },
             { token: 8, name: "Sita Patel", status: "Checked-In", eta: "10:20 AM" },
-            { token: 18, name: "[You]", status: "Waiting", eta: "11:30 AM" }
+            { token: 10, name: "[You]", status: "Waiting", eta: "10:35 AM" }
         ];
         
         // Initialize dashboard
@@ -564,8 +563,8 @@
                     element.classList.remove('token-completed', 'token-waiting', 
                                            'token-current', 'token-checked-in', 'token-not-arrived');
                     
-                    // Special handling for token 18 (user's token) when marked as present
-                    if (tokenNumber == 18 && status == 'checked-in') {
+                    // Special handling for token 10 (user's token) when marked as present
+                    if (tokenNumber == 10 && status == 'checked-in') {
                         element.style.background = 'black';
                         element.style.color = 'white';
                         element.style.borderColor = 'black';
