@@ -221,12 +221,6 @@
             border-color: #545b62;
         }
         
-        .token-absent {
-            background: #dc3545;
-            color: white;
-            border-color: #c82333;
-        }
-        
         .token-waiting {
             background: #ffc107;
             color: #212529;
@@ -432,10 +426,6 @@
                     <div class="legend-key token-not-arrived"></div>
                     <span>NOT ARRIVED</span>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-key token-absent"></div>
-                    <span>ABSENT</span>
-                </div>
             </div>
             
             <!-- Token Keys Display -->
@@ -444,13 +434,13 @@
                     <div class="token-key token-completed">1</div>
                     <div class="token-key token-completed">2</div>
                     <div class="token-key token-completed">3</div>
-                    <div class="token-key token-absent">4</div>
-                    <div class="token-key token-absent">5</div>
-                    <div class="token-key token-absent">6</div>
+                    <div class="token-key token-not-arrived">4</div>
+                    <div class="token-key token-completed">5</div>
+                    <div class="token-key token-not-arrived">6</div>
                     <div class="token-key token-current">7</div>
                     <div class="token-key token-checked-in">8</div>
-                    <div class="token-key token-checked-in">9</div>
-                    <div class="token-key token-checked-in">10</div>
+                    <div class="token-key token-not-arrived">9</div>
+                    <div class="token-key token-not-arrived">10</div>
                 </div>
                 <div class="token-row">
                     <div class="token-key token-checked-in">11</div>
@@ -461,8 +451,8 @@
                     <div class="token-key token-not-arrived">16</div>
                     <div class="token-key token-not-arrived">17</div>
                     <div class="token-key token-not-arrived">18</div>
-                    <div class="token-key token-not-arrived">19</div>
-                    <div class="token-key token-not-arrived">20</div>
+                    <div class="token-key token-checked-in">19</div>
+                    <div class="token-key token-checked-in">20</div>
                 </div>
             </div>
         </div>
@@ -487,7 +477,7 @@
                 ✔️ Patient 7 checked in
             </div>
             <div class="alert-item alert-danger">
-                ❌ Patient 6 absent — skipped
+                ❌ Patient 6 not arrived — skipped
             </div>
             <div class="alert-item alert-info">
                 ⏱️ Avg. consult time: <span id="avgTime">12</span> min

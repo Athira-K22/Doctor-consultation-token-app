@@ -158,11 +158,7 @@
             border-color: #545b62;
         }
         
-        .token-absent {
-            background: #dc3545;
-            color: white;
-            border-color: #c82333;
-        }
+
         
         .token-waiting {
             background: #ffc107;
@@ -237,9 +233,7 @@
             font-weight: bold;
         }
         
-        .status-absent {
-            color: #dc3545;
-        }
+
         
         .your-row {
             background: #fff3cd;
@@ -397,10 +391,6 @@
                     <div class="legend-key token-not-arrived"></div>
                     <span>NOT ARRIVED</span>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-key token-absent"></div>
-                    <span>ABSENT</span>
-                </div>
             </div>
             
             <!-- Token Keys Display -->
@@ -409,9 +399,9 @@
                     <div class="token-key token-completed">1</div>
                     <div class="token-key token-completed">2</div>
                     <div class="token-key token-completed">3</div>
-                    <div class="token-key token-absent">4</div>
-                    <div class="token-key token-absent">5</div>
-                    <div class="token-key token-absent">6</div>
+                    <div class="token-key token-not-arrived">4</div>
+                    <div class="token-key token-not-arrived">5</div>
+                    <div class="token-key token-not-arrived">6</div>
                     <div class="token-key token-current">7</div>
                     <div class="token-key token-checked-in">8</div>
                     <div class="token-key token-checked-in">9</div>
@@ -530,7 +520,7 @@
                 case 'Skipped': return 'status-skipped';
                 case 'Waiting': return 'status-waiting';
                 case 'Checked-In': return 'status-checked-in';
-                case 'Absent': return 'status-absent';
+                case 'Not Arrived': return 'status-not-arrived';
                 default: return '';
             }
         }
@@ -571,7 +561,7 @@
             tokenElements.forEach(element => {
                 if (element.textContent == tokenNumber) {
                     // Remove all status classes
-                    element.classList.remove('token-completed', 'token-absent', 'token-waiting', 
+                    element.classList.remove('token-completed', 'token-waiting', 
                                            'token-current', 'token-checked-in', 'token-not-arrived');
                     
                     // Special handling for token 18 (user's token) when marked as present

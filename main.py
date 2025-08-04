@@ -57,7 +57,7 @@ class TokenSystem:
     def mark_present(self, token):
         self.tokens_present.add(token)
 
-    def mark_absent(self, token):
+    def mark_not_arrived(self, token):
         self.tokens_present.discard(token)
 
     def start_consultation(self, token):
@@ -69,7 +69,7 @@ class TokenSystem:
             self.token_times[token][1] = datetime.now()
         self.current_token = None
 
-    def get_absent_tokens(self):
+    def get_not_arrived_tokens(self):
         return [t for t in range(1, self.tokens_issued+1) if t not in self.tokens_present]
 
 class ConsultationStats:
@@ -105,7 +105,7 @@ def get_status():
         "current_token": tokens.current_token,
         "tokens_issued": tokens.tokens_issued,
         "tokens_present": sorted(list(tokens.tokens_present)),
-        "tokens_absent": tokens.get_absent_tokens(),
+        "tokens_not_arrived": tokens.get_not_arrived_tokens(),
         "avg_consult_time": str(stats.avg_consult_time()),
     }
 
@@ -136,9 +136,9 @@ def token_arrive(token: int):
     tokens.mark_present(token)
     return {"ok": True}
 
-@app.post("/token/absent/{token}")
-def token_absent(token: int):
-    tokens.mark_absent(token)
+@app.post("/token/not-arrived/{token}")
+def token_not_arrived(token: int):
+    tokens.mark_not_arrived(token)
     return {"ok": True}
 
 @app.post("/consult/start/{token}")
