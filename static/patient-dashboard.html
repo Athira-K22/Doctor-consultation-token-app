@@ -394,32 +394,7 @@
             </div>
             
             <!-- Token Keys Display -->
-            <div class="token-keys-container">
-                <div class="token-row">
-                    <div class="token-key token-completed">1</div>
-                    <div class="token-key token-completed">2</div>
-                    <div class="token-key token-completed">3</div>
-                    <div class="token-key token-not-arrived">4</div>
-                    <div class="token-key token-not-arrived">5</div>
-                    <div class="token-key token-not-arrived">6</div>
-                    <div class="token-key token-current">7</div>
-                    <div class="token-key token-checked-in">8</div>
-                    <div class="token-key token-checked-in">9</div>
-                    <div class="token-key token-checked-in">10</div>
-                </div>
-                <div class="token-row">
-                    <div class="token-key token-checked-in">11</div>
-                    <div class="token-key token-checked-in">12</div>
-                    <div class="token-key token-checked-in">13</div>
-                    <div class="token-key token-checked-in">14</div>
-                    <div class="token-key token-checked-in">15</div>
-                    <div class="token-key token-not-arrived">16</div>
-                    <div class="token-key token-not-arrived">17</div>
-                    <div class="token-key token-not-arrived" style="border-color: #0066cc; border-width: 4px; background: #fff3cd;">18</div>
-                    <div class="token-key token-not-arrived">19</div>
-                    <div class="token-key token-not-arrived">20</div>
-                </div>
-            </div>
+            <div class="token-keys-container"></div>
         </div>
         
         <!-- Controls Section -->
@@ -445,9 +420,9 @@
     </div>
     
     <script>
-        let myToken = 18;
+        let myToken = 21;
         let isCheckedIn = false;
-        let totalTokensToday = 20;
+        let totalTokensToday = 21;
         
         // Sample data matching wireframe
         let queueData = [
@@ -455,7 +430,7 @@
             { token: 6, name: "Jane Smith", status: "Skipped", eta: "--" },
             { token: 7, name: "Ali Khan", status: "Current", eta: "10:10 AM" },
             { token: 8, name: "Sita Patel", status: "Checked-In", eta: "10:20 AM" },
-            { token: 18, name: "[You]", status: "Waiting", eta: "11:30 AM" }
+            { token: 21, name: "[You]", status: "Waiting", eta: "11:30 AM" }
         ];
         
         // Initialize dashboard
@@ -475,42 +450,39 @@
             document.getElementById('yourToken').textContent = myToken;
             updateDisplay();
             updateQueue();
+            generateTokenGrid(); // Generate token grid on init
             
-            // Auto-refresh every 30 seconds
-            setInterval(fetchServerData, 30000);
+            // Auto-refresh every 2 seconds for near real-time updates
+            setInterval(fetchServerData, 2000);
         }
         
         // Update display
         function updateDisplay() {
             document.getElementById('yourToken').textContent = myToken;
             document.getElementById('tokensToday').textContent = totalTokensToday;
-            
-            // Update your row in the table
-            const yourData = queueData.find(q => q.token === myToken);
-            if (yourData) {
-                document.getElementById('yourETA').textContent = yourData.eta;
-            }
         }
         
         // Update queue table
         function updateQueue() {
             const tbody = document.getElementById('queueTableBody');
-            tbody.innerHTML = '';
-            
-            queueData.forEach(item => {
-                const row = document.createElement('tr');
-                if (item.token === myToken) {
-                    row.className = 'your-row';
-                }
+            if (tbody) { // Check if table exists
+                tbody.innerHTML = '';
                 
-                row.innerHTML = `
-                    <td>${item.token}</td>
-                    <td>${item.name}</td>
-                    <td class="${getStatusClass(item.status)}">${item.status}</td>
-                    <td>${item.eta}</td>
-                `;
-                tbody.appendChild(row);
-            });
+                queueData.forEach(item => {
+                    const row = document.createElement('tr');
+                    if (item.token === myToken) {
+                        row.className = 'your-row';
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${item.token}</td>
+                        <td>${item.name}</td>
+                        <td class="${getStatusClass(item.status)}">${item.status}</td>
+                        <td>${item.eta}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
         }
         
         // Get status CSS class
@@ -564,24 +536,62 @@
                     element.classList.remove('token-completed', 'token-waiting', 
                                            'token-current', 'token-checked-in', 'token-not-arrived');
                     
-                    // Special handling for token 18 (user's token) when marked as present
-                    if (tokenNumber == 18 && status == 'checked-in') {
-                        element.style.background = 'black';
-                        element.style.color = 'white';
-                        element.style.borderColor = 'black';
+                    // Add the new status class
+                    element.classList.add('token-' + status);
+                    
+                    // Keep the special styling if it's the user's token
+                    if (tokenNumber == myToken) {
+                        element.style.borderColor = '#138496'; // Match checked-in color
                         element.style.borderWidth = '4px';
-                    } else {
-                        // Add the new status class for other tokens
-                        element.classList.add('token-' + status);
-                        
-                        // Keep the special styling if it's the user's token
-                        if (tokenNumber == myToken) {
-                            element.style.borderColor = '#138496'; // Match checked-in color
-                            element.style.borderWidth = '4px';
-                        }
                     }
                 }
             });
+        }
+        
+        // Generate token grid function
+        function generateTokenGrid() {
+            console.log("Generating token grid with totalTokensToday:", totalTokensToday);
+            const gridContainer = document.querySelector('.token-keys-container');
+            gridContainer.innerHTML = '';
+            const tokensPerRow = 10;
+            let rowDiv = null;
+            
+            // Make sure we're showing at least up to token 30
+            const maxToken = Math.max(30, totalTokensToday);
+            
+            for (let i = 1; i <= maxToken; i++) {
+                if ((i - 1) % tokensPerRow === 0) {
+                    rowDiv = document.createElement('div');
+                    rowDiv.className = 'token-row';
+                    gridContainer.appendChild(rowDiv);
+                }
+                
+                const tokenDiv = document.createElement('div');
+                // Default class, will update below
+                let tokenClass = 'token-key token-not-arrived';
+                
+                // Find token status from queueData if available
+                const tokenData = queueData.find(t => t.token === i);
+                if (tokenData) {
+                    if (tokenData.status === 'Completed') tokenClass = 'token-key token-completed';
+                    else if (tokenData.status === 'Checked-In') tokenClass = 'token-key token-checked-in';
+                    else if (tokenData.status === 'Current') tokenClass = 'token-key token-current';
+                    else if (tokenData.status === 'Skipped') tokenClass = 'token-key token-not-arrived';
+                    else if (tokenData.status === 'Waiting') tokenClass = 'token-key token-not-arrived';
+                }
+                
+                tokenDiv.className = tokenClass;
+                tokenDiv.textContent = i;
+                
+                // Highlight user's token
+                if (i === myToken) {
+                    tokenDiv.style.borderColor = '#0066cc';
+                    tokenDiv.style.borderWidth = '4px';
+                    tokenDiv.style.background = '#fff3cd';
+                }
+                
+                rowDiv.appendChild(tokenDiv);
+            }
         }
         
         // Add notification
@@ -622,13 +632,16 @@
                 
                 // Process server token data
                 if (allTokensData.tokens) {
-                    // Update queue with server data
+                    queueData = allTokensData.tokens; // Update queueData with server data
+                    totalTokensToday = Math.max(21, queueData.length); // Ensure we show at least up to token 21
                     updateDisplay();
                     updateQueue();
+                    generateTokenGrid(); // Refresh the token grid
                 }
             }).catch(err => {
                 console.log('Server fetch error:', err);
                 // Continue with demo data
+                generateTokenGrid(); // Ensure grid is generated even if fetch fails
             });
         }
         
