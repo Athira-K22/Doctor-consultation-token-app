@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from datetime import datetime, timedelta
 
@@ -93,6 +93,10 @@ class ConsultationStats:
 doctor = DoctorStatus()
 tokens = TokenSystem()
 stats = ConsultationStats(tokens)
+
+@app.get("/")
+def read_root():
+    return RedirectResponse(url="/static/index.html")
 
 @app.get("/status")
 def get_status():
