@@ -45,7 +45,7 @@ class DoctorStatus:
 
 class TokenSystem:
     def __init__(self):
-        self.tokens_issued = 0
+        self.tokens_issued = 20  # Starting from 20 so first token will be 21
         self.tokens_present = set()
         self.current_token = None
         self.token_times = {}  # token: (start_time, end_time)
@@ -53,6 +53,10 @@ class TokenSystem:
     def issue_token(self):
         self.tokens_issued += 1
         return self.tokens_issued
+
+@app.get("/token/next")
+def next_token():
+    return {"next_token": tokens.tokens_issued + 1}
 
     def mark_present(self, token):
         self.tokens_present.add(token)
@@ -150,6 +154,24 @@ def consult_start(token: int):
 def consult_end(token: int):
     tokens.end_consultation(token)
     return {"ok": True}
+
+@app.get("/tokens/total")
+def get_total_tokens():
+    return {"total": tokens.tokens_issued}
+
+@app.get("/tokens/current")
+def get_current_token():
+    return {"current_token": tokens.current_token}
+
+@app.get("/tokens/all")
+def get_all_tokens():
+    return {
+        "tokens": {
+            "issued": tokens.tokens_issued,
+            "present": sorted(list(tokens.tokens_present)),
+            "current": tokens.current_token
+        }
+    }
 
 if __name__ == "__main__":
     import uvicorn

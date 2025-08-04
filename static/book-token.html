@@ -267,14 +267,38 @@
     </div>
     
     <script>
-        let nextTokenNumber = 21;
+        let nextTokenNumber = null;
         let currentServing = 7;
         let avgConsultTime = 12; // minutes
         let bookingDetails = {};
-        
+
+        // Fetch the next token number from backend (does not increment)
+        async function previewNextTokenNumber() {
+            try {
+                const res = await fetch('/token/next');
+                const data = await res.json();
+                if (data.next_token) {
+                    nextTokenNumber = data.next_token;
+                    localStorage.setItem('nextTokenNumber', nextTokenNumber); // Store in memory
+                    document.getElementById('nextToken').textContent = nextTokenNumber;
+                }
+            } catch (err) {
+                console.error('Error previewing next token:', err);
+                nextTokenNumber = 'N/A';
+                document.getElementById('nextToken').textContent = 'N/A';
+            }
+        }
         // Initialize page
         function init() {
             loadBookingDetails();
+            // Try to load from localStorage first
+            const storedToken = localStorage.getItem('nextTokenNumber');
+            if (storedToken) {
+                nextTokenNumber = storedToken;
+                document.getElementById('nextToken').textContent = nextTokenNumber;
+            }
+            // Then fetch from backend to ensure it's up to date
+            previewNextTokenNumber();
             updateStatus();
             loadFormData();
         }
@@ -353,7 +377,7 @@
         }
         
         // Confirm booking function
-        function confirmBooking() {
+        async function confirmBooking() {
             const patientName = document.getElementById('patientName').value.trim();
             const patientPhone = document.getElementById('patientPhone').value.trim();
             
@@ -377,10 +401,28 @@
                 return;
             }
             
+            // Actually increment and get the token number from backend
+            let bookedToken = null;
+            try {
+                const res = await fetch('/token/issue', { method: 'POST' });
+                const data = await res.json();
+                if (data.token) {
+                    bookedToken = data.token;
+                    nextTokenNumber = bookedToken;
+                    document.getElementById('nextToken').textContent = nextTokenNumber;
+                }
+            } catch (err) {
+                alert('Could not book token. Please try again.');
+                return;
+            }
+            if (!bookedToken) {
+                alert('Could not book token. Please try again.');
+                return;
+            }
             const formData = {
                 name: patientName,
                 phone: patientPhone,
-                tokenNumber: nextTokenNumber,
+                tokenNumber: bookedToken,
                 ...bookingDetails
             };
             
@@ -390,6 +432,10 @@
             
             // Book the token
             bookToken(formData);
+            // Update localStorage for next token
+            localStorage.setItem('nextTokenNumber', bookedToken + 1);
+            // Refresh preview for next booking
+            previewNextTokenNumber();
         }
         
         // Book token function
@@ -416,6 +462,7 @@ Estimated Wait Time: ${(formData.tokenNumber - currentServing - 1) * avgConsultT
 Please arrive 10 minutes before your estimated time.`);
                 
                 // Save token info for patient dashboard
+                localStorage.setItem('patientToken', formData.tokenNumber);
                 localStorage.setItem('myToken', JSON.stringify({
                     number: formData.tokenNumber,
                     name: formData.name,

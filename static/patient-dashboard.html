@@ -418,6 +418,8 @@
                     <div class="token-key token-not-arrived">19</div>
                     <div class="token-key token-not-arrived">20</div>
                 </div>
+                <!-- New tokens (21+) will be added dynamically here -->
+                <div id="dynamic-tokens"></div>
             </div>
         </div>
         
@@ -444,39 +446,120 @@
     </div>
     
     <script>
-        let myToken = 10;
+        let totalTokensToday = 0;
         let isCheckedIn = false;
-        let totalTokensToday = 20;
+        let myToken = 0; // Global variable for user's token
         
-        // Sample data matching wireframe
+        async function fetchTotalTokens() {
+            try {
+                const res = await fetch('/tokens/total');
+                const data = await res.json();
+                if (data.total !== undefined) {
+                    totalTokensToday = data.total;
+                    document.getElementById('tokensToday').textContent = totalTokensToday;
+                }
+            } catch (err) {
+                console.error('Error fetching total tokens:', err);
+            }
+        }
+
+        // Sample data matching wireframe - will be updated with real data
         let queueData = [
-            { token: 5, name: "John Doe", status: "Completed", eta: "09:40 AM" },
-            { token: 6, name: "Jane Smith", status: "Skipped", eta: "--" },
-            { token: 7, name: "Ali Khan", status: "Current", eta: "10:10 AM" },
-            { token: 8, name: "Sita Patel", status: "Checked-In", eta: "10:20 AM" },
-            { token: 10, name: "[You]", status: "Waiting", eta: "10:35 AM" }
+            { token: 21, name: "John Doe", status: "Completed", eta: "09:40 AM" },
+            { token: 22, name: "Jane Smith", status: "Skipped", eta: "--" },
+            { token: 23, name: "Ali Khan", status: "Current", eta: "10:10 AM" },
+            { token: 24, name: "Sita Patel", status: "Checked-In", eta: "10:20 AM" },
+            { token: 25, name: "[You]", status: "Waiting", eta: "10:35 AM" }
         ];
+        
+        // User's token is defined globally
         
         // Initialize dashboard
         function init() {
-            // Get token from URL or localStorage
-            const urlParams = new URLSearchParams(window.location.search);
-            const tokenFromUrl = urlParams.get('token');
-            
-            if (tokenFromUrl) {
-                myToken = parseInt(tokenFromUrl);
-                localStorage.setItem('patientToken', myToken);
-            } else {
-                const stored = localStorage.getItem('patientToken');
-                if (stored) myToken = parseInt(stored);
+            fetchTotalTokens(); // Update Tokens Today from backend
+            // Always show the last booked token from localStorage
+            myToken = parseInt(localStorage.getItem('patientToken')) || 0;
+            if (myToken) {
+                document.getElementById('yourToken').textContent = myToken;
             }
-            
-            document.getElementById('yourToken').textContent = myToken;
             updateDisplay();
             updateQueue();
             
+            // Generate token grid dynamically
+            generateTokenGrid();
+            
             // Auto-refresh every 30 seconds
             setInterval(fetchServerData, 30000);
+            
+            // Fetch data immediately on load
+            fetchServerData();
+        }
+        
+        // Generate token grid dynamically based on issued tokens
+        function generateTokenGrid() {
+            const dynamicContainer = document.getElementById('dynamic-tokens');
+            dynamicContainer.innerHTML = '';
+            
+            // Only show tokens up to the highest issued token
+            // Use ONLY totalTokensToday to determine what tokens to show
+            const maxToken = totalTokensToday;
+            
+            // If no tokens have been issued yet, don't show anything
+            if (maxToken < 21) {
+                return;
+            }
+            
+            // Create row for tokens 21 and above (new tokens)
+            let currentRow = document.createElement('div');
+            currentRow.className = 'token-row';
+            let tokensInRow = 0;
+            
+            // Start from 21 and go up to the highest issued token
+            for (let i = 21; i <= maxToken; i++) {
+                // Start a new row every 10 tokens
+                if (tokensInRow === 10) {
+                    dynamicContainer.appendChild(currentRow);
+                    currentRow = document.createElement('div');
+                    currentRow.className = 'token-row';
+                    tokensInRow = 0;
+                }
+                
+                let tokenDiv = document.createElement('div');
+                
+                // Determine token status
+                let tokenStatus = 'not-arrived';
+                
+                // Check if this token is in our queue data
+                const tokenData = queueData.find(item => item.token === i);
+                if (tokenData) {
+                    switch(tokenData.status) {
+                        case 'Completed': tokenStatus = 'completed'; break;
+                        case 'Current': tokenStatus = 'current'; break;
+                        case 'Checked-In': tokenStatus = 'checked-in'; break;
+                        case 'Waiting': tokenStatus = 'waiting'; break;
+                        default: tokenStatus = 'not-arrived';
+                    }
+                } else if (i === myToken) {
+                    tokenStatus = 'waiting';
+                }
+                
+                tokenDiv.className = 'token-key token-' + tokenStatus;
+                
+                // Highlight user's token
+                if (i === myToken) {
+                    tokenDiv.style.borderColor = '#0066cc';
+                    tokenDiv.style.borderWidth = '4px';
+                }
+                
+                tokenDiv.textContent = i;
+                currentRow.appendChild(tokenDiv);
+                tokensInRow++;
+            }
+            
+            // Add the last row if it has any tokens
+            if (tokensInRow > 0) {
+                dynamicContainer.appendChild(currentRow);
+            }
         }
         
         // Update display
@@ -563,8 +646,8 @@
                     element.classList.remove('token-completed', 'token-waiting', 
                                            'token-current', 'token-checked-in', 'token-not-arrived');
                     
-                    // Special handling for token 10 (user's token) when marked as present
-                    if (tokenNumber == 10 && status == 'checked-in') {
+                    // Special handling for user's token when marked as present
+                    if (tokenNumber == myToken && status == 'checked-in') {
                         element.style.background = 'black';
                         element.style.color = 'white';
                         element.style.borderColor = 'black';
@@ -603,27 +686,61 @@
         // Fetch data from server
         function fetchServerData() {
             Promise.all([
-                fetch('/doctor/status').then(r => r.json()),
-                fetch('/tokens/current').then(r => r.json()),
-                fetch('/tokens/all').then(r => r.json())
-            ]).then(([doctorData, currentData, allTokensData]) => {
+                fetch('/status').then(r => r.json()),
+                fetch('/tokens/total').then(r => r.json()).catch(() => ({total: 0}))
+            ]).then(([statusData, totalData]) => {
                 // Update doctor status
-                if (doctorData.status) {
-                    const statusText = doctorData.status === 'Available' ? '[Active 🔵]' : 
-                                     doctorData.status === 'Away' ? '[Away 🟡]' : '[Not Started 🔴]';
+                if (statusData.doctor_status) {
+                    const statusText = statusData.doctor_status.includes('Available') ? '[Active 🔵]' : 
+                                     statusData.doctor_status.includes('Away') ? '[Away 🟡]' : '[Not Started 🔴]';
                     document.getElementById('doctorStatus').textContent = statusText;
                 }
                 
-                // Update current token and queue
-                if (currentData.current_token) {
-                    // Update queue based on current token
+                // Update tokens issued
+                if (totalData.total) {
+                    totalTokensToday = totalData.total;
+                    document.getElementById('tokensToday').textContent = totalTokensToday;
                 }
                 
-                // Process server token data
-                if (allTokensData.tokens) {
-                    // Update queue with server data
-                    updateDisplay();
-                    updateQueue();
+                // Update current token
+                if (statusData.current_token) {
+                    // Find the current token in the queue and update its status
+                    const currentTokenIndex = queueData.findIndex(item => item.token === statusData.current_token);
+                    if (currentTokenIndex >= 0) {
+                        queueData[currentTokenIndex].status = 'Current';
+                    }
+                }
+                
+                // Update tokens present
+                if (statusData.tokens_present) {
+                    // Update the queue data with tokens present
+                    statusData.tokens_present.forEach(token => {
+                        if (!queueData.some(item => item.token === token)) {
+                            queueData.push({ token: token, name: `Patient ${token}`, status: 'Checked-In', eta: '--' });
+                        }
+                    });
+                }
+                
+                // Make sure user's token is in the queue
+                if (myToken && !queueData.some(item => item.token === myToken)) {
+                    queueData.push({ token: myToken, name: '[You]', status: 'Waiting', eta: '--' });
+                }
+                
+                // Sort queue by token number
+                queueData.sort((a, b) => a.token - b.token);
+                
+                // Update the display
+                updateDisplay();
+                updateQueue();
+                
+                // Regenerate token grid to show new tokens
+                generateTokenGrid();
+                
+                // Add notification for new tokens if needed
+                const previousTotal = parseInt(localStorage.getItem('lastTotalTokens')) || 0;
+                if (totalTokensToday > previousTotal && totalTokensToday >= 21) {
+                    addNotification(`🎫 New token #${totalTokensToday} has been issued`, 'info');
+                    localStorage.setItem('lastTotalTokens', totalTokensToday);
                 }
             }).catch(err => {
                 console.log('Server fetch error:', err);
