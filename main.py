@@ -91,6 +91,7 @@ class ConsultationStats:
         return str(avg * len(tokens_ahead))
 
 doctor = DoctorStatus()
+doctor.start()  # Start the doctor as Available by default
 tokens = TokenSystem()
 stats = ConsultationStats(tokens)
 

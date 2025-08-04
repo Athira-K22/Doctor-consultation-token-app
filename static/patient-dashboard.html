@@ -408,13 +408,10 @@
             <div class="section-title">Notifications</div>
             
             <div class="notification-item notification-warning">
-                🔔 Doctor is now on break
+                🔔 Consultation started at 2PM
             </div>
             <div class="notification-item notification-info">
                 🔔 Token 6 was skipped
-            </div>
-            <div class="notification-item notification-success">
-                🔔 Your turn is approaching!
             </div>
         </div>
     </div>
@@ -426,6 +423,10 @@
         
         // Sample data for first 20 tokens (existing statuses)
         let baseQueueData = [
+            { token: 1, name: "Patient 1", status: "Completed", eta: "08:00 AM" },
+            { token: 2, name: "Patient 2", status: "Completed", eta: "08:15 AM" },
+            { token: 3, name: "Patient 3", status: "Completed", eta: "08:30 AM" },
+            { token: 4, name: "Patient 4", status: "Completed", eta: "08:45 AM" },
             { token: 5, name: "John Doe", status: "Completed", eta: "09:40 AM" },
             { token: 6, name: "Jane Smith", status: "Skipped", eta: "--" },
             { token: 7, name: "Ali Khan", status: "Current", eta: "10:10 AM" },
@@ -681,8 +682,15 @@
                 .then(data => {
                     // Update doctor status
                     if (data.doctor_status) {
-                        const statusText = data.doctor_status.includes('Available') ? '[Active 🔵]' : 
-                                         data.doctor_status.includes('Away') ? '[Away 🟡]' : '[Not Started 🔴]';
+                        let statusText;
+                        if (data.doctor_status.includes('Available') || data.doctor_status === 'Available') {
+                            statusText = '[Active 🔵]';
+                        } else if (data.doctor_status.includes('Away') || data.doctor_status === 'Away') {
+                            statusText = '[Away 🟡]';
+                        } else {
+                            // For "Not Started" or any other status, show as Active for demo
+                            statusText = '[Active 🔵]';
+                        }
                         document.getElementById('doctorStatus').textContent = statusText;
                     }
                     
